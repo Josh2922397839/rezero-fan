@@ -63,7 +63,7 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 <span class="badge-pulse inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase rounded-full border border-primary-500/60 text-primary-400 mb-8">⚔️ Arc 6 Canon · Bloodlusted · Free For All</span>
 </div>
 <h1 class="hero-title fade-up leading-none mb-6" style="transition-delay:.3s">RE:ZERO BATTLE ROYALE</h1>
-<p class="fade-up text-zinc-400 max-w-xl text-lg leading-relaxed" style="transition-delay:.5s">7 combatants. One neutral battlefield.<br>Authority vs Divine Protection vs Reality itself.</p>
+<p class="fade-up text-zinc-400 max-w-xl text-base sm:text-lg leading-relaxed px-4" style="transition-delay:.5s">7 combatants. One neutral battlefield.<br class="hidden sm:block">Authority vs Divine Protection vs Reality itself.</p>
 <div class="fade-up mt-16 bounce-arrow text-zinc-600" style="transition-delay:.7s"><i class="fas fa-chevron-down text-2xl"></i></div>
 </section>
 
@@ -162,8 +162,8 @@ ${f.abilities.map(a=>`<li class="flex items-start gap-2"><span class="mt-1.5 w-1
 </ul>
 <div class="mb-4"><p class="text-xs text-zinc-500 mb-1.5 font-medium">Threat Level — ${f.threat}/100</p><div class="threat-bar"><div class="threat-fill" data-width="${f.threat}" style="background:${f.color}"></div></div></div>
 <span class="inline-block px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">${isWinner?'🏆 WINNER':f.outcome==='FIRST DEAD'?'💀 FIRST DEAD':'Eliminated Phase '+f.phase}</span>`;
-card.addEventListener('mouseenter',()=>{card.style.borderColor=f.color+'99';card.style.boxShadow=`0 16px 48px ${f.color}33`;card.style.transform='translateY(-6px)'});
-card.addEventListener('mouseleave',()=>{card.style.borderColor='';card.style.boxShadow='';card.style.transform=''});
+card.addEventListener('pointerenter',(e)=>{if(e.pointerType==='mouse'){card.style.borderColor=f.color+'99';card.style.boxShadow=`0 16px 48px ${f.color}33`;card.style.transform='translateY(-6px)'}});
+card.addEventListener('pointerleave',(e)=>{if(e.pointerType==='mouse'){card.style.borderColor='';card.style.boxShadow='';card.style.transform=''}});
 grid.appendChild(card);
 });
 
@@ -175,7 +175,7 @@ div.className='fade-up glass phase-card p-0 overflow-hidden';
 div.style.transitionDelay=`${i*0.15}s`;
 div.innerHTML=`
 <div class="absolute left-0 top-0 bottom-0 w-1" style="background:${p.color}"></div>
-<div class="p-8 sm:p-10 pl-8 sm:pl-12">
+<div class="p-6 sm:p-10 pl-7 sm:pl-12">
 <div class="flex flex-col lg:flex-row gap-8">
 <div class="flex-1">
 <span class="inline-block px-3 py-1 text-xs font-bold rounded-full text-white mb-4" style="background:${p.color}">PHASE ${p.num}</span>
@@ -233,7 +233,8 @@ let particles=[];
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
 function createParticles(){
 particles=[];
-for(let i=0;i<120;i++){
+const count=window.innerWidth<768?40:120;
+for(let i=0;i<count;i++){
 particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1,color:colors[Math.floor(Math.random()*colors.length)],alpha:Math.random()*.4+.2});
 }}
 function draw(){
@@ -250,6 +251,8 @@ requestAnimationFrame(draw);
 resize();createParticles();draw();
 window.addEventListener('resize',()=>{resize();createParticles()});
 window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+window.addEventListener('touchmove',e=>{if(e.touches.length>0){mx=e.touches[0].clientX;my=e.touches[0].clientY;}});
+window.addEventListener('touchend',()=>{mx=-1;my=-1;});
 })();
 </script>
 </body>
