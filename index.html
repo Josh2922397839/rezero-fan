@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Re:Zero Battle Royale | Arc 6 Power Scaling</title>
+<meta name="description" content="A cinematic breakdown of the ultimate 7-way battle royale in Re:Zero's Arc 6 universe.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['Outfit','sans-serif']},colors:{base:'var(--bg-base)',card:'var(--bg-card)',main:'var(--text-main)',muted:'var(--text-muted)',divider:'var(--border-subtle)',primary:{400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed'},accent:{400:'#f472b6',500:'#ec4899',600:'#db2777'}}}}}
+</script>
+<style>
+:root{--bg-base:#09090b;--bg-card:rgba(24,24,27,0.75);--bg-input:rgba(39,39,42,0.6);--bg-hover:rgba(139,92,246,0.15);--text-main:#f4f4f5;--text-muted:#71717a;--border-subtle:rgba(255,255,255,0.07);--accent-purple:#8b5cf6;--accent-pink:#ec4899;--accent-red:#ef4444;--accent-cyan:#06b6d4;--accent-gold:#f59e0b}
+*{transition:background-color .4s ease,border-color .4s ease,color .3s ease}
+body{background:var(--bg-base);color:var(--text-main);font-family:'Inter',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-subtle);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#8b5cf6}
+.glass{background:var(--bg-card);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border-subtle);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.05) inset}
+.orb{position:fixed;border-radius:50%;pointer-events:none;mix-blend-mode:screen;z-index:0}
+.orb-1{width:60vw;height:60vw;top:-20%;left:-15%;background:#8b5cf6;opacity:.18;filter:blur(120px);animation:pulse1 8s ease-in-out infinite}
+.orb-2{width:50vw;height:50vw;bottom:-20%;right:-15%;background:#ec4899;opacity:.12;filter:blur(100px);animation:pulse2 12s ease-in-out infinite}
+@keyframes pulse1{0%,100%{transform:scale(1);opacity:.18}50%{transform:scale(1.15);opacity:.22}}
+@keyframes pulse2{0%,100%{transform:scale(1);opacity:.12}50%{transform:scale(1.1);opacity:.16}}
+.dot-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='white' fill-opacity='0.04'/%3E%3C/svg%3E")}
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.hero-title{font-family:'Outfit',sans-serif;font-weight:900;font-size:clamp(2.5rem,8vw,7rem);background:linear-gradient(90deg,#a78bfa,#f472b6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;filter:drop-shadow(0 0 30px rgba(139,92,246,.3)) drop-shadow(0 0 60px rgba(236,72,153,.2))}
+.badge-pulse{animation:badgePulse 2s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 8px rgba(139,92,246,.4)}50%{box-shadow:0 0 20px rgba(139,92,246,.7)}}
+.bounce-arrow{animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+.threat-bar{height:8px;border-radius:9999px;background:var(--bg-input);overflow:hidden}
+.threat-fill{height:100%;border-radius:9999px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.section-line{width:60px;height:4px;border-radius:9999px;background:linear-gradient(90deg,#8b5cf6,#ec4899)}
+.phase-card{position:relative;overflow:hidden}
+.phase-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.ranking-row{transition:all .3s ease}
+.ranking-row:hover{background:var(--bg-hover);transform:translateX(4px)}
+.winner-glow{animation:winGlow 3s ease-in-out infinite}
+@keyframes winGlow{0%,100%{box-shadow:0 0 20px rgba(245,158,11,.2),0 8px 32px rgba(0,0,0,.4)}50%{box-shadow:0 0 40px rgba(245,158,11,.4),0 8px 32px rgba(0,0,0,.4)}}
+canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+</style>
+</head>
+<body class="min-h-screen relative">
+<!-- BG LAYERS -->
+<canvas id="particles"></canvas>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="dot-grid"></div>
+
+<!-- MAIN CONTENT -->
+<div class="relative z-10">
+
+<!-- HERO -->
+<section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+<div class="fade-up" style="transition-delay:.1s">
+<span class="badge-pulse inline-block px-4 py-1.5 text-xs font-semibold tracking-widest uppercase rounded-full border border-primary-500/60 text-primary-400 mb-8">⚔️ Arc 6 Canon · Bloodlusted · Free For All</span>
+</div>
+<h1 class="hero-title fade-up leading-none mb-6" style="transition-delay:.3s">RE:ZERO BATTLE ROYALE</h1>
+<p class="fade-up text-zinc-400 max-w-xl text-lg leading-relaxed" style="transition-delay:.5s">7 combatants. One neutral battlefield.<br>Authority vs Divine Protection vs Reality itself.</p>
+<div class="fade-up mt-16 bounce-arrow text-zinc-600" style="transition-delay:.7s"><i class="fas fa-chevron-down text-2xl"></i></div>
+</section>
+
+<!-- COMBATANTS -->
+<section id="combatants" class="max-w-[1200px] mx-auto px-6 py-20 sm:py-32">
+<div class="fade-up mb-12"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">THE COMBATANTS</h2><div class="section-line"></div></div>
+<div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+</section>
+
+<!-- POWER CHART -->
+<section id="chart-section" class="max-w-[1200px] mx-auto px-6 py-20 sm:py-32">
+<div class="fade-up mb-12"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">POWER SCALING VISUALIZATION</h2><div class="section-line"></div></div>
+<div class="fade-up glass p-6 sm:p-10"><div class="relative" style="min-height:320px"><canvas id="powerChart" style="height:360px"></canvas></div><p class="text-zinc-500 text-sm mt-6">Scaling based on canon Arc 6 / Season 4 abilities only. No future arc spoilers. Power = Authorities + Divine Protections + hax ceiling.</p></div>
+</section>
+
+<!-- PHASES -->
+<section id="phases" class="max-w-[1200px] mx-auto px-6 py-20 sm:py-32">
+<div class="fade-up mb-12"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">PHASE-BY-PHASE BREAKDOWN</h2><div class="section-line"></div></div>
+<div id="phases-container" class="space-y-8"></div>
+</section>
+
+<!-- FINAL VERDICT -->
+<section id="verdict" class="max-w-[1200px] mx-auto px-6 py-20 sm:py-32 text-center">
+<div class="fade-up mb-4"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-2">FINAL VERDICT</h2><p class="text-zinc-500 text-lg">Who survives the apocalypse?</p></div>
+<div class="fade-up winner-glow glass max-w-2xl mx-auto p-10 mt-10 border-amber-500/30" style="transition-delay:.2s">
+<span class="inline-block px-4 py-1.5 text-sm font-bold rounded-full bg-amber-500/20 text-amber-400 mb-4">🏆 WINNER</span>
+<h3 class="font-display text-4xl sm:text-5xl font-black text-amber-400 mb-2">Reinhard van Astrea</h3>
+<p class="text-amber-500/80 font-semibold mb-4">Wins 7-8 out of 10 times</p>
+<p class="text-zinc-400 leading-relaxed max-w-lg mx-auto">The only combatant whose power set is literally designed to adapt to and overcome anything. Divine Protections counter every ability on this battlefield. No hax reaches him.</p>
+</div>
+<div id="rankings" class="fade-up max-w-2xl mx-auto mt-12 text-left" style="transition-delay:.4s"></div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/5 mt-20">
+<div class="h-1 w-full bg-gradient-to-r from-primary-500 via-accent-500 to-cyan-500 opacity-40"></div>
+<div class="max-w-[1200px] mx-auto px-6 py-12 text-center text-zinc-600 text-sm space-y-2">
+<p class="font-display font-600 text-zinc-400">Re:Zero Battle Royale Analysis</p>
+<p>Based on canon abilities through Arc 6 / Season 4</p>
+<p>No future arc spoilers. All power scaling is discussed in good faith.</p>
+<p class="mt-4">Built with ❤️ by a Re:Zero fan</p>
+</div>
+</footer>
+
+</div>
+
+<script>
+// === DATA ===
+const fighters=[
+{name:"Reinhard van Astrea",title:"The Sword Saint",color:"#f59e0b",authority:"Divine Protections (∞)",abilities:["Adapts to literally any threat mid-fight","Conceptual sword — cuts through hax","World restoration after apocalyptic damage","Immune to curses, debuffs, absolute zero"],threat:99,outcome:"WINNER",phase:null},
+{name:"Pandora",title:"Witch of Vainglory",color:"#8b5cf6",authority:"Authority of Vainglory",abilities:["Conditional death denial — instant revival","Erases events/actions from existence","Reality/memory rewrite on conditions","Teleportation + minor spirit summoning"],threat:94,outcome:"2nd",phase:3},
+{name:"Satella",title:"Witch of Envy",color:"#7c3aed",authority:"Authority of Envy",abilities:["Devouring shadows — eat mana and concepts","Soul-link to Subaru (emotional interference)","Original sin-tier destructive output","Corrupts other Authorities at deep level"],threat:92,outcome:"3rd",phase:3},
+{name:"Aldebaran (Al)",title:"The Death Looper",color:"#ef4444",authority:"Domain (Death Loop)",abilities:["Trial-and-error death loops to find perfect counter","Master swordsman — Garfiel-tier physicals","High-tier magic dispel","Builds perfect strategy through repetition"],threat:80,outcome:"4th",phase:3},
+{name:"Puck",title:"Beast of the End",color:"#06b6d4",authority:"Great Spirit (Fire/Ice)",abilities:["Absolute zero freeze — continental scale AOE","Massive mana blast — shatters everything","Giant ice kaiju form","Previously bodied by Reinhard once"],threat:87,outcome:"5th",phase:3},
+{name:"Ram",title:"Oni Demon Maid",color:"#ec4899",authority:"Full Horn Oni Mode",abilities:["Wind magic god-tier output","Army-slicing speed and strength","Horn amplifies all stats dramatically","Finite power — burns out eventually"],threat:72,outcome:"6th",phase:2},
+{name:"Subaru Natsuki",title:"The Protagonist (Casualty)",color:"#6b7280",authority:"Return by Death",abilities:["Return by Death (not combat-applicable here)","Physically a wet noodle","Emotional manipulation potential","Cannon fodder in direct combat"],threat:8,outcome:"FIRST DEAD",phase:1}
+];
+
+const phases=[
+{num:1,label:"OPENING CHAOS",time:"0–30 seconds",color:"#ef4444",clash:"Puck's Absolute Zero vs Reinhard's Protections",clashIcon:"fa-snowflake",
+text:"The fight explodes instantly. Puck transforms into the Beast of the End — a massive ice storm blankets the field, temperatures plummet to absolute zero, and everything begins shattering. Ram activates her horn immediately and charges with wind blades that could carve mountains, targeting the weakest link. Al draws his sword and starts analyzing for Domain setup while moving at superhuman speeds. Pandora stands motionless, already rewriting minor phenomena. Satella's shadows leak across the battlefield, devouring the cold and mana in the air. Reinhard casually walks through absolute zero like a spring breeze — his Divine Protections simply say 'no.'",
+eliminated:["Subaru Natsuki"]},
+{num:2,label:"HAXES CLASH",time:"30 sec – 5 min",color:"#f59e0b",clash:"Pandora's Reality Rewrite vs Satella's Devouring Shadows",clashIcon:"fa-bolt",
+text:"The battlefield is now a frozen wasteland of shattered ice and black mist. Ram goes all-out, using her Oni strength to blitz Puck and trade massive wind slashes for ice constructs. She's powerful here, but Puck's raw scale starts overwhelming her — until Reinhard steps in and cleaves a chunk of Puck's beast form with a single swing. Meanwhile, Al triggers his Domain. He picks a territory and starts the victim loop — dying and redoing sections of the fight to find the perfect counter. Pandora begins rewriting phenomena: sword swings that never connected, attacks redirected at allies. Satella's shadows erupt and try to devour Pandora whole. Pandora rewrites them into harmless mist — but Satella's Envy Authority keeps them coming back stronger because devouring is her core concept. Ram gets worn down trading blows with Al's loops and eventually falls to a stray shadow or Pandora rewrite.",
+eliminated:["Ram"]},
+{num:3,label:"GOD-TIER ENDGAME",time:"5+ minutes",color:"#8b5cf6",clash:"Reinhard vs Both Witches Simultaneously",clashIcon:"fa-crown",
+text:"Now it's Pandora, Reinhard, Satella, a weakening Puck, and a frantically looping Al. Puck attempts one last world-ending ice nuke — Reinhard restores the world like it's nothing. Satella and Pandora enter a full Witch hax duel: shadows versus reality rewrites. Pandora keeps denying damage, but Satella's Envy is original sin-level broken — it starts corrupting the very concepts Pandora rewrites. Al's Domain is running hot, but with two Witches and Reinhard warping reality, the loops get shorter and more desperate. Puck falls next — too much AOE spam exhausts him against Reinhard's adaptive tankiness. Al's loops finally collapse when Reinhard or Satella breaks the Domain through raw power or conceptual resistance. The final showdown between Reinhard and the Witches ends with the Sword Saint's protections countering every conceptual trick they throw. He is literally built to overcome anything.",
+eliminated:["Puck","Aldebaran (Al)","Satella","Pandora"]}
+];
+
+const rankings=[
+{rank:1,name:"Reinhard van Astrea",color:"#f59e0b",reason:"Divine Protections adapt to literally everything. Unbeatable."},
+{rank:2,name:"Pandora",color:"#8b5cf6",reason:"Reality rewrite hax is disgusting, but gets out-haxed by the top tier combo."},
+{rank:3,name:"Satella",color:"#7c3aed",reason:"Devouring shadows eat everything but can't quite pin down the Sword Saint."},
+{rank:4,name:"Aldebaran (Al)",color:"#ef4444",reason:"Death loops carry him far, but multi-threat chaos overwhelms setup time."},
+{rank:5,name:"Puck",color:"#06b6d4",reason:"Continental AOE is terrifying, but already been bodied by Reinhard before."},
+{rank:6,name:"Ram",color:"#ec4899",reason:"Oni power is insane but finite. Not Witch/Reinhard tier."},
+{rank:7,name:"Subaru Natsuki",color:"#6b7280",reason:"Return by Death doesn't help in a snapshot battle royale. Gone in seconds."}
+];
+
+// === RENDER COMBATANT CARDS ===
+const grid=document.getElementById('cards-grid');
+fighters.forEach((f,i)=>{
+const isWinner=f.outcome==='WINNER';
+const badgeClass=isWinner?'bg-amber-500/20 text-amber-400':'bg-zinc-800 text-zinc-400';
+const card=document.createElement('div');
+card.className='glass p-6 fade-up group cursor-default relative overflow-hidden';
+card.style.transitionDelay=`${i*0.08}s`;
+card.innerHTML=`
+<div class="absolute top-0 left-0 right-0 h-1 rounded-t-[20px]" style="background:${f.color}"></div>
+<h3 class="font-display font-extrabold text-xl mt-2 mb-1" style="color:${f.color}">${f.name}</h3>
+<p class="text-zinc-500 text-sm italic mb-3">${f.title}</p>
+<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full mb-4" style="background:${f.color}22;color:${f.color}">${f.authority}</span>
+<ul class="space-y-2 mb-5 text-sm" style="color: rgba(255, 255, 255, 0.85);">
+${f.abilities.map(a=>`<li class="flex items-start gap-2"><span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style="background:${f.color}"></span>${a}</li>`).join('')}
+</ul>
+<div class="mb-4"><p class="text-xs text-zinc-500 mb-1.5 font-medium">Threat Level — ${f.threat}/100</p><div class="threat-bar"><div class="threat-fill" data-width="${f.threat}" style="background:${f.color}"></div></div></div>
+<span class="inline-block px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">${isWinner?'🏆 WINNER':f.outcome==='FIRST DEAD'?'💀 FIRST DEAD':'Eliminated Phase '+f.phase}</span>`;
+card.addEventListener('mouseenter',()=>{card.style.borderColor=f.color+'99';card.style.boxShadow=`0 16px 48px ${f.color}33`;card.style.transform='translateY(-6px)'});
+card.addEventListener('mouseleave',()=>{card.style.borderColor='';card.style.boxShadow='';card.style.transform=''});
+grid.appendChild(card);
+});
+
+// === RENDER PHASES ===
+const pc=document.getElementById('phases-container');
+phases.forEach((p,i)=>{
+const div=document.createElement('div');
+div.className='fade-up glass phase-card p-0 overflow-hidden';
+div.style.transitionDelay=`${i*0.15}s`;
+div.innerHTML=`
+<div class="absolute left-0 top-0 bottom-0 w-1" style="background:${p.color}"></div>
+<div class="p-8 sm:p-10 pl-8 sm:pl-12">
+<div class="flex flex-col lg:flex-row gap-8">
+<div class="flex-1">
+<span class="inline-block px-3 py-1 text-xs font-bold rounded-full text-white mb-4" style="background:${p.color}">PHASE ${p.num}</span>
+<h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-1">${p.label}</h3>
+<p class="text-zinc-500 text-sm mb-5">${p.time}</p>
+<p class="leading-relaxed text-sm sm:text-base" style="color: rgba(255, 255, 255, 0.85);">${p.text}</p>
+${p.eliminated.length?`<div class="mt-6 pt-4 border-t border-white/5"><p class="text-xs text-zinc-500 font-semibold uppercase tracking-wider mb-3">Eliminated This Phase</p><div class="flex flex-wrap gap-2">${p.eliminated.map(n=>{const f=fighters.find(x=>x.name===n);return`<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white" style="background:${f.color}33"><span class="w-2 h-2 rounded-full" style="background:${f.color}"></span>${n}</span>`}).join('')}</div></div>`:''}
+</div>
+<div class="lg:w-72 shrink-0">
+<div class="glass p-5 text-center">
+<p class="text-xs text-zinc-500 uppercase tracking-wider font-semibold mb-3">Key Clash</p>
+<div class="font-display font-extrabold text-base text-white"><i class="fas ${p.clashIcon} text-2xl mb-2 block opacity-80" style="color:${p.color}"></i>${p.clash}</div>
+</div></div></div></div>`;
+pc.appendChild(div);
+});
+
+// === RENDER RANKINGS ===
+const rl=document.getElementById('rankings');
+rankings.forEach(r=>{
+const row=document.createElement('div');
+row.className='ranking-row flex items-center gap-4 px-5 py-3 rounded-xl cursor-default';
+row.innerHTML=`<span class="font-display font-black text-2xl w-8" style="color:${r.color}">${r.rank}</span><span class="w-3 h-3 rounded-full shrink-0" style="background:${r.color}"></span><div><p class="font-semibold text-sm">${r.name}</p><p class="text-zinc-500 text-xs">${r.reason}</p></div>`;
+rl.appendChild(row);
+});
+
+// === CHART ===
+let chartInit=false;
+function initChart(){
+if(chartInit)return;chartInit=true;
+const sorted=[...fighters].sort((a,b)=>b.threat-a.threat);
+new Chart(document.getElementById('powerChart'),{
+type:'bar',
+data:{labels:sorted.map(f=>f.name),datasets:[{label:'Threat Level',data:sorted.map(f=>f.threat),backgroundColor:sorted.map(f=>f.color+'cc'),borderColor:sorted.map(f=>f.color),borderWidth:1,borderRadius:6,barPercentage:.7}]},
+options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeOutQuart'},scales:{x:{max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#71717a'}},y:{grid:{display:false},ticks:{color:'#f4f4f5',font:{family:'Outfit',weight:700,size:13}}}},plugins:{legend:{display:false}}}
+});
+}
+
+// === INTERSECTION OBSERVER ===
+const obs=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{
+if(e.isIntersecting){
+e.target.classList.add('visible');
+e.target.querySelectorAll('.threat-fill').forEach(bar=>{bar.style.width=bar.dataset.width+'%'});
+if(e.target.closest('#chart-section'))initChart();
+}});
+},{threshold:0.15});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// === PARTICLES ===
+(function(){
+const c=document.getElementById('particles'),ctx=c.getContext('2d');
+let w,h,mx=-1,my=-1;
+const colors=['#8b5cf6','#ec4899','#06b6d4','#ef4444'];
+let particles=[];
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+function createParticles(){
+particles=[];
+for(let i=0;i<120;i++){
+particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2+1,color:colors[Math.floor(Math.random()*colors.length)],alpha:Math.random()*.4+.2});
+}}
+function draw(){
+ctx.clearRect(0,0,w,h);
+particles.forEach(p=>{
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+if(mx>0){const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy);if(dist<100){const f=.3/dist;p.vx+=dx*f;p.vy+=dy*f}}
+p.vx*=.99;p.vy*=.99;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill()});
+ctx.globalAlpha=1;
+requestAnimationFrame(draw);
+}
+resize();createParticles();draw();
+window.addEventListener('resize',()=>{resize();createParticles()});
+window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+})();
+</script>
+</body>
+</html>
