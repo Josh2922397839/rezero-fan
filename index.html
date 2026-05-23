@@ -39,22 +39,24 @@ body{background:var(--bg-base);color:var(--text-main);font-family:'Inter',sans-s
 .threat-fill{height:100%;border-radius:9999px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
 .section-line{width:60px;height:4px;border-radius:9999px;background:linear-gradient(90deg,#8b5cf6,#ec4899)}
 .phase-card{position:relative;overflow:hidden}
-.phase-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
 .ranking-row{transition:all .3s ease}
 .ranking-row:hover{background:var(--bg-hover);transform:translateX(4px)}
 .winner-glow{animation:winGlow 3s ease-in-out infinite}
 @keyframes winGlow{0%,100%{box-shadow:0 0 20px rgba(245,158,11,.2),0 8px 32px rgba(0,0,0,.4)}50%{box-shadow:0 0 40px rgba(245,158,11,.4),0 8px 32px rgba(0,0,0,.4)}}
+.draw-glow{animation:drawGlow 3s ease-in-out infinite}
+@keyframes drawGlow{0%,100%{box-shadow:0 0 20px rgba(139,92,246,.2),0 8px 32px rgba(0,0,0,.4)}50%{box-shadow:0 0 40px rgba(139,92,246,.4),0 8px 32px rgba(0,0,0,.4)}}
 canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.scenario-tab{cursor:pointer;transition:all .3s ease}
+.scenario-tab.active{border-color:#8b5cf6 !important;box-shadow:0 0 24px rgba(139,92,246,.3)}
+.scenario-tab:hover:not(.active){border-color:rgba(139,92,246,.3)}
 </style>
 </head>
 <body class="min-h-screen relative">
-<!-- BG LAYERS -->
 <canvas id="particles"></canvas>
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="dot-grid"></div>
 
-<!-- MAIN CONTENT -->
 <div class="relative z-10">
 
 <!-- HERO -->
@@ -65,6 +67,23 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 <h1 class="hero-title fade-up leading-none mb-6" style="transition-delay:.3s">RE:ZERO BATTLE ROYALE</h1>
 <p class="fade-up text-zinc-400 max-w-xl text-base sm:text-lg leading-relaxed px-4" style="transition-delay:.5s">7 combatants. One neutral battlefield.<br class="hidden sm:block">Authority vs Divine Protection vs Reality itself.</p>
 <div class="fade-up mt-16 bounce-arrow text-zinc-600" style="transition-delay:.7s"><i class="fas fa-chevron-down text-2xl"></i></div>
+</section>
+
+<!-- SCENARIO SELECTOR -->
+<section id="scenario-select" class="max-w-[1200px] mx-auto px-6 py-12">
+<div class="fade-up mb-8"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">SELECT SCENARIO</h2><div class="section-line"></div></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 fade-up" style="transition-delay:.1s">
+<div class="scenario-tab glass p-6 active" data-scenario="0" onclick="switchScenario(0)">
+<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-purple-500/20 text-purple-400 mb-3">⚔️ Scenario 1</span>
+<h3 class="font-display font-extrabold text-xl mb-2">Free-For-All Battle Royale</h3>
+<p class="text-zinc-400 text-sm">7 solo combatants. No teams, no alliances. Pure chaos until one stands.</p>
+</div>
+<div class="scenario-tab glass p-6" data-scenario="1" onclick="switchScenario(1)">
+<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-red-500/20 text-red-400 mb-3">🐉 Scenario 2</span>
+<h3 class="font-display font-extrabold text-xl mb-2">Team Battle: Paired Alliances</h3>
+<p class="text-zinc-400 text-sm">Forced pairings with Cor Leonis links, dragon riders, and team elimination rules.</p>
+</div>
+</div>
 </section>
 
 <!-- COMBATANTS -->
@@ -87,42 +106,35 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 
 <!-- FINAL VERDICT -->
 <section id="verdict" class="max-w-[1200px] mx-auto px-6 py-20 sm:py-32 text-center">
-<div class="fade-up mb-4"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-2">FINAL VERDICT</h2><p class="text-zinc-500 text-lg">Who survives the apocalypse?</p></div>
-<div class="fade-up winner-glow glass max-w-2xl mx-auto p-10 mt-10 border-amber-500/30" style="transition-delay:.2s">
-<span class="inline-block px-4 py-1.5 text-sm font-bold rounded-full bg-amber-500/20 text-amber-400 mb-4">🏆 WINNER</span>
-<h3 class="font-display text-4xl sm:text-5xl font-black text-amber-400 mb-2">Reinhard van Astrea</h3>
-<p class="text-amber-500/80 font-semibold mb-4">Wins 7-8 out of 10 times</p>
-<p class="text-zinc-400 leading-relaxed max-w-lg mx-auto">The only combatant whose power set is literally designed to adapt to and overcome anything. Divine Protections counter every ability on this battlefield. No hax reaches him.</p>
-</div>
-<div id="rankings" class="fade-up max-w-2xl mx-auto mt-12 text-left" style="transition-delay:.4s"></div>
+<div id="verdict-container"></div>
 </section>
 
 <!-- FOOTER -->
 <footer class="border-t border-white/5 mt-20">
 <div class="h-1 w-full bg-gradient-to-r from-primary-500 via-accent-500 to-cyan-500 opacity-40"></div>
 <div class="max-w-[1200px] mx-auto px-6 py-12 text-center text-zinc-600 text-sm space-y-2">
-<p class="font-display font-600 text-zinc-400">Re:Zero Battle Royale Analysis</p>
+<p class="font-display font-semibold text-zinc-400">Re:Zero Battle Royale Analysis</p>
 <p>Based on canon abilities through Arc 6 / Season 4</p>
 <p>No future arc spoilers. All power scaling is discussed in good faith.</p>
 <p class="mt-4">Built with ❤️ by a Re:Zero fan</p>
 </div>
 </footer>
-
 </div>
 
 <script>
-// === DATA ===
-const fighters=[
+// ============ STORYLINE DATA ============
+const storylines=[{
+// ---- SCENARIO 1: FREE FOR ALL ----
+fighters:[
 {name:"Reinhard van Astrea",title:"The Sword Saint",color:"#f59e0b",authority:"Divine Protections (∞)",abilities:["Adapts to literally any threat mid-fight","Conceptual sword cuts through any hax","World restoration after apocalyptic damage","Immune to curses, debuffs, absolute zero"],threat:99,outcome:"WINNER",phase:null},
 {name:"Pandora",title:"Witch of Vainglory",color:"#8b5cf6",authority:"Authority of Vainglory",abilities:["Conditional death denial, instant revival","Erases events/actions from existence","Reality/memory rewrite on conditions","Teleportation + minor spirit summoning"],threat:94,outcome:"2nd",phase:3},
 {name:"Satella",title:"Witch of Envy",color:"#7c3aed",authority:"Authority of Envy",abilities:["Devouring shadows that eat mana and concepts","Soul-link to Subaru (emotional interference)","Original sin-tier destructive output","Corrupts other Authorities at deep level"],threat:92,outcome:"3rd",phase:3},
 {name:"Aldebaran (Al)",title:"The Death Looper",color:"#ef4444",authority:"Domain (Death Loop)",abilities:["Trial-and-error death loops to find perfect counter","Master swordsman with Garfiel-tier physicals","High-tier magic dispel","Builds perfect strategy through repetition"],threat:80,outcome:"4th",phase:3},
 {name:"Puck",title:"Beast of the End",color:"#06b6d4",authority:"Great Spirit (Fire/Ice)",abilities:["Absolute zero freeze with continental scale AOE","Massive mana blast that shatters everything","Giant ice kaiju form","Previously bodied by Reinhard once"],threat:87,outcome:"5th",phase:3},
-{name:"Ram",title:"Oni Demon Maid",color:"#ec4899",authority:"Full Horn Oni Mode",abilities:["Wind magic god-tier output","Army-slicing speed and strength","Horn amplifies all stats dramatically","Finite power — burns out eventually"],threat:72,outcome:"6th",phase:2},
+{name:"Ram",title:"Oni Demon Maid",color:"#ec4899",authority:"Full Horn Oni Mode",abilities:["Wind magic god-tier output","Army-slicing speed and strength","Horn amplifies all stats dramatically","Finite power, burns out eventually"],threat:72,outcome:"6th",phase:2},
 {name:"Subaru Natsuki",title:"The Protagonist (Casualty)",color:"#6b7280",authority:"Return by Death",abilities:["Return by Death (not combat-applicable here)","Physically a wet noodle","Emotional manipulation potential","Cannon fodder in direct combat"],threat:8,outcome:"FIRST DEAD",phase:1}
-];
-
-const phases=[
+],
+phases:[
 {num:1,label:"OPENING CHAOS",time:"0–30 seconds",color:"#ef4444",clash:"Puck's Absolute Zero vs Reinhard's Protections",clashIcon:"fa-snowflake",
 text:"The fight explodes instantly. Puck transforms into the Beast of the End as a massive ice storm blankets the field, temperatures plummet to absolute zero, and everything begins shattering. Ram activates her horn immediately and charges with wind blades that could carve mountains, targeting the weakest link. Al draws his sword and starts analyzing for Domain setup while moving at superhuman speeds. Pandora stands motionless, already rewriting minor phenomena. Satella's shadows leak across the battlefield, devouring the cold and mana in the air. Reinhard casually walks through absolute zero like a spring breeze since his Divine Protections simply say 'no.'",
 eliminated:["Subaru Natsuki"]},
@@ -132,9 +144,8 @@ eliminated:["Ram"]},
 {num:3,label:"GOD-TIER ENDGAME",time:"5+ minutes",color:"#8b5cf6",clash:"Reinhard vs Both Witches Simultaneously",clashIcon:"fa-crown",
 text:"Now it's Pandora, Reinhard, Satella, a weakening Puck, and a frantically looping Al. Puck attempts one last world-ending ice nuke but Reinhard restores the world like it's nothing. Satella and Pandora enter a full Witch hax duel: shadows versus reality rewrites. Pandora keeps denying damage, but Satella's Envy is original sin-level broken as it starts corrupting the very concepts Pandora rewrites. Al's Domain is running hot, but with two Witches and Reinhard warping reality, the loops get shorter and more desperate. Puck falls next because too much AOE spam exhausts him against Reinhard's adaptive tankiness. Al's loops finally collapse when Reinhard or Satella breaks the Domain through raw power or conceptual resistance. The final showdown between Reinhard and the Witches ends with the Sword Saint's protections countering every conceptual trick they throw. He is literally built to overcome anything.",
 eliminated:["Puck","Aldebaran (Al)","Satella","Pandora"]}
-];
-
-const rankings=[
+],
+rankings:[
 {rank:1,name:"Reinhard van Astrea",color:"#f59e0b",reason:"Divine Protections adapt to literally everything. Unbeatable."},
 {rank:2,name:"Pandora",color:"#8b5cf6",reason:"Reality rewrite hax is disgusting, but gets out-haxed by the top tier combo."},
 {rank:3,name:"Satella",color:"#7c3aed",reason:"Devouring shadows eat everything but can't quite pin down the Sword Saint."},
@@ -142,13 +153,72 @@ const rankings=[
 {rank:5,name:"Puck",color:"#06b6d4",reason:"Continental AOE is terrifying, but already been bodied by Reinhard before."},
 {rank:6,name:"Ram",color:"#ec4899",reason:"Oni power is insane but finite. Not Witch/Reinhard tier."},
 {rank:7,name:"Subaru Natsuki",color:"#6b7280",reason:"Return by Death doesn't help in a snapshot battle royale. Gone in seconds."}
-];
+],
+verdict:{badge:"🏆 WINNER",name:"Reinhard van Astrea",subtitle:"Wins 7-8 out of 10 times",text:"The only combatant whose power set is literally designed to adapt to and overcome anything. Divine Protections counter every ability on this battlefield. No hax reaches him.",color:"#f59e0b",glowClass:"winner-glow",borderClass:"border-amber-500/30",badgeBg:"bg-amber-500/20",badgeText:"text-amber-400",nameClass:"text-amber-400",subClass:"text-amber-500/80"}
+},{
+// ---- SCENARIO 2: TEAM BATTLE ----
+fighters:[
+{name:"Reinhard van Astrea",title:"The Sword Saint (Solo)",color:"#f59e0b",authority:"Divine Protections (∞)",abilities:["Adapts to any threat including team combos","Conceptual sword cuts through bonds and rewrites","Strolls through everything like a polite suggestion","Cannot be budged by any combatant or team"],threat:99,outcome:"LAST STANDING",phase:null},
+{name:"Satella",title:"Witch of Envy (Solo)",color:"#7c3aed",authority:"Authority of Envy",abilities:["Devouring shadows feast on the collapsing battlefield","Doubles down when allies fall around her","Corrupts other Authorities at deep level","Waits for Subaru in the Shadow Garden"],threat:95,outcome:"LAST STANDING",phase:null},
+{name:"Al + Volcanica",title:"Death Loop Dragon Riders",color:"#ef4444",authority:"Domain + Dragon Vessel",abilities:["Al's death loops combined with ancient dragon power","Volcanica's purifying breath obliterates shadows and ice","Book of the Dead hijacks the dragon's empty body","Domain resets give infinite tactical retries"],threat:90,outcome:"3rd",phase:4},
+{name:"Subaru + Ram",title:"Cor Leonis Partnership",color:"#ec4899",authority:"Cor Leonis + Oni Horn",abilities:["Subaru absorbs all pain and damage through the link","Ram goes full Oni with dramatically amplified stats","Coordinated wind strikes with shared senses","Limited by Subaru's physical endurance"],threat:82,outcome:"4th",phase:4},
+{name:"Pandora",title:"Witch of Vainglory (Solo)",color:"#8b5cf6",authority:"Authority of Vainglory",abilities:["Reality rewrite targets team bonds directly","Vanity conditions limit when she can rewrite","Overextends when pressed by multiple threats","Dissolved when conditions finally crack"],threat:88,outcome:"5th",phase:4},
+{name:"Puck",title:"Beast of the End (Solo)",color:"#06b6d4",authority:"Great Spirit (Fire/Ice)",abilities:["Absolute zero freeze on continental scale","Exhausts himself against linked teams","Purifying breath pierces his core eventually","First major elimination of the fight"],threat:78,outcome:"6th",phase:3}
+],
+phases:[
+{num:1,label:"ALLIANCES FORM",time:"0–60 seconds",color:"#ef4444",clash:"Subaru's Cor Leonis vs The Frozen Battlefield",clashIcon:"fa-handshake",
+text:"Subaru hits the snow hard, breath fogging, heart slamming. He activates Cor Leonis immediately and the invisible lion's heart link snaps into place with Ram. Pain, exhaustion, the crushing cold... Subaru takes it all. Ram's horn erupts in full Oni glory, wind blades howling around her like a hurricane. She's faster, stronger, more vicious than ever because Subaru is literally eating her burden. She grabs his collar and launches both of them skyward on a wind platform while Subaru maps out their strategy: play support and counter, hit the big ones with coordinated strikes while they're distracted. Twenty meters away, Al cracks his neck and grins. Book of the Dead energy surges as his consciousness floods Volcanica's empty vessel. The ancient dragon's eyes flash with Al's personality for a split second before the pair goes full kaiju. Volcanica's wings spread like living siege engines, purifying white-blue dragon breath charging in its maw while Al rides its back, sword out, already scanning for the perfect Domain checkpoint.",
+eliminated:[]},
+{num:2,label:"TACTICAL BLOODBATH",time:"1–10 minutes",color:"#f59e0b",clash:"Al's Domain Loops vs Pandora's Reality Rewrites",clashIcon:"fa-bolt",
+text:"Puck's roar shakes the ground as absolute zero slams everything into flash-freeze. Ram blitzes forward, wind slicing ice constructs like paper while Subaru feeds her every ounce of endurance through Cor Leonis. He spots the opening: Satella's shadows are temporarily weak to Ram's wind attribute. A tornado of razor wind carves a path straight toward Puck's core. The cat-spirit beast howls and swings a massive icy claw and Subaru takes the hit through the link, ribs cracking. Ram's horn glows brighter as she counters with a point-blank wind drill that punches through Puck's shoulder. Al and Volcanica go loud. The dragon unleashes a purifying breath that lights up the sky like a second sun, white flames disintegrating ice and shadows on contact. Al triggers his Domain immediately when a stray shadow tendril grazes Volcanica's wing. Time loops for their pair only: death undone, knowledge gained. Pandora notices the teams and smiles wider. Reality glitches as Ram's wind blades suddenly 'never existed' and fizzle mid-swing. Subaru feels the backlash through Cor Leonis and realizes she's targeting the link. Meanwhile, Reinhard strolls through everything like it's a polite suggestion. One sword swing and half of Puck's arm disintegrates. His protections adapt instantly: anti-rewrite, anti-shadow, anti-ice. He is the anchor no one can move.",
+eliminated:[]},
+{num:3,label:"DESPERATE ALLIANCES",time:"10–25 minutes",color:"#8b5cf6",clash:"Linked Teams vs Satella's Shadow Devour",clashIcon:"fa-link",
+text:"The pairs start coordinating across the chaos out of sheer necessity. When Satella tries to devour the whole battlefield, Ram shouts that Subaru's Cor Leonis can link teams. Subaru extends the Authority into a triple-bond. Ram's output skyrockets while Subaru and Al both eat the cost. Volcanica's purifying breath combined with Ram's wind blades creates a holy cyclone that actually pushes Satella's shadows back for the first time. Al expands his Domain and figures out Pandora's weakness: she can't rewrite anything that doesn't stroke her ego. Make her look weak and she slips. He and Subaru trade rapid-fire plans mid-loop while Al tests and discards suicidal charges until they find the perfect angle. Puck goes down hard first. The Beast of the End exhausts itself trying to freeze the entire linked team. Volcanica's purifying breath pierces its core after Al loops the killing blow a dozen times. The cat-spirit shatters into glittering dust. Pandora tries rewriting the battlefield so it 'never had teams.' The bonds flicker as Subaru screams, blood pouring from his eyes and nose. Ram's horn flares supernova bright, pouring everything into maintaining the partnership. Al triggers a massive Domain reset and the rewrite breaks. Pandora actually looks furious. Reinhard just keeps coming, cutting through loops and rewrites like tissue paper.",
+eliminated:["Puck"]},
+{num:4,label:"ENDGAME COLLAPSE",time:"25+ minutes",color:"#ef4444",clash:"Every Team vs Reinhard",clashIcon:"fa-skull",
+text:"Satella and Pandora tag-team the pairs while Reinhard cleans up stragglers. Subaru is a walking corpse at this point, every injury funneled straight into him through Cor Leonis. Ram looks at him with something almost like respect and tells him he's carried enough. Al and Volcanica go for the throat on Pandora. Dragon breath plus looped sword strikes force her to overextend until her vanity conditions crack. Al lands the finishing blow while the dragon pins her and Pandora dissolves into glittering vanity particles. But Reinhard is still there and Satella's shadows are feasting on the collapsing battlefield. Ram's horn starts flickering as she burns out. Subaru pours everything left into the link for one final boost. It ends in a draw that feels like mutual destruction. Ram and Subaru's team collapses first as Ram's horn shatters under the combined weight of Satella's shadow devour and Reinhard's adaptive sword. Subaru's Cor Leonis link screams as he feels her permanent death hit. Al and Volcanica last longer thanks to Domain loops, but Reinhard eventually cuts through the dragon's heart stone after too many resets. Satella's shadows consume what's left. Reinhard and Satella stand amid the ruins, the only ones still moving. The frozen plains go quiet. But somewhere in the Shadow Garden, Subaru is already waking up.",
+eliminated:["Pandora","Subaru + Ram","Al + Volcanica"]}
+],
+rankings:[
+{rank:1,name:"Reinhard van Astrea",color:"#f59e0b",reason:"Walks through everything. Divine Protections counter all hax, all teams, all concepts."},
+{rank:1,name:"Satella",color:"#7c3aed",reason:"Infinite shadow devour outlasts every partnership. Waits in the ruins for Subaru."},
+{rank:3,name:"Al + Volcanica",color:"#ef4444",reason:"Domain loops plus dragon power lasted the longest. Fell to Reinhard's adaptive strikes."},
+{rank:4,name:"Subaru + Ram",color:"#ec4899",reason:"Cor Leonis carried Ram to insane heights but Subaru's body gave out first."},
+{rank:5,name:"Pandora",color:"#8b5cf6",reason:"Vanity conditions cracked under coordinated team pressure. Dissolved mid-endgame."},
+{rank:6,name:"Puck",color:"#06b6d4",reason:"Beast of the End exhausted itself against linked teams. First major casualty."}
+],
+verdict:{badge:"⚔️ DRAW",name:"Reinhard & Satella",subtitle:"Last ones standing amid the ruins",text:"The Sword Saint and the Witch of Envy outlast everyone through sheer broken power. Reinhard's adaptive protections and Satella's infinite shadow devour are the two forces no team could permanently overcome. The frozen plains go quiet, but somewhere in the Shadow Garden, Subaru is already waking up.",color:"#8b5cf6",glowClass:"draw-glow",borderClass:"border-purple-500/30",badgeBg:"bg-purple-500/20",badgeText:"text-purple-400",nameClass:"text-purple-400",subClass:"text-purple-500/80"}
+}];
 
-// === RENDER COMBATANT CARDS ===
+// ============ STATE ============
+let currentScenario=0;
+let chartInstance=null;
+
+// ============ RENDER ============
+function switchScenario(idx){
+currentScenario=idx;
+document.querySelectorAll('.scenario-tab').forEach((t,i)=>{
+t.classList.toggle('active',i===idx);
+});
+renderAll(storylines[idx]);
+}
+
+function renderAll(s){
+renderCards(s.fighters);
+renderPhases(s.phases,s.fighters);
+renderRankings(s.rankings);
+renderVerdict(s.verdict);
+renderChart(s.fighters);
+reobserve();
+}
+
+function renderCards(fighters){
 const grid=document.getElementById('cards-grid');
+grid.innerHTML='';
 fighters.forEach((f,i)=>{
-const isWinner=f.outcome==='WINNER';
+const isWinner=f.outcome==='WINNER'||f.outcome==='LAST STANDING';
 const badgeClass=isWinner?'bg-amber-500/20 text-amber-400':'bg-zinc-800 text-zinc-400';
+const badgeText=isWinner?(f.outcome==='WINNER'?'🏆 WINNER':'⚔️ LAST STANDING'):f.outcome==='FIRST DEAD'?'💀 FIRST DEAD':'Eliminated Phase '+f.phase;
 const card=document.createElement('div');
 card.className='glass p-6 fade-up group cursor-default relative overflow-hidden';
 card.style.transitionDelay=`${i*0.08}s`;
@@ -157,18 +227,20 @@ card.innerHTML=`
 <h3 class="font-display font-extrabold text-xl mt-2 mb-1" style="color:${f.color}">${f.name}</h3>
 <p class="text-zinc-500 text-sm italic mb-3">${f.title}</p>
 <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full mb-4" style="background:${f.color}22;color:${f.color}">${f.authority}</span>
-<ul class="space-y-2 mb-5 text-sm" style="color: rgba(255, 255, 255, 0.85);">
+<ul class="space-y-2 mb-5 text-sm" style="color:rgba(255,255,255,0.85)">
 ${f.abilities.map(a=>`<li class="flex items-start gap-2"><span class="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style="background:${f.color}"></span>${a}</li>`).join('')}
 </ul>
 <div class="mb-4"><p class="text-xs text-zinc-500 mb-1.5 font-medium">Threat Level: ${f.threat}/100</p><div class="threat-bar"><div class="threat-fill" data-width="${f.threat}" style="background:${f.color}"></div></div></div>
-<span class="inline-block px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">${isWinner?'🏆 WINNER':f.outcome==='FIRST DEAD'?'💀 FIRST DEAD':'Eliminated Phase '+f.phase}</span>`;
+<span class="inline-block px-3 py-1 text-xs font-bold rounded-full ${badgeClass}">${badgeText}</span>`;
 card.addEventListener('pointerenter',(e)=>{if(e.pointerType==='mouse'){card.style.borderColor=f.color+'99';card.style.boxShadow=`0 16px 48px ${f.color}33`;card.style.transform='translateY(-6px)'}});
 card.addEventListener('pointerleave',(e)=>{if(e.pointerType==='mouse'){card.style.borderColor='';card.style.boxShadow='';card.style.transform=''}});
 grid.appendChild(card);
 });
+}
 
-// === RENDER PHASES ===
+function renderPhases(phases,fighters){
 const pc=document.getElementById('phases-container');
+pc.innerHTML='';
 phases.forEach((p,i)=>{
 const div=document.createElement('div');
 div.className='fade-up glass phase-card p-0 overflow-hidden';
@@ -181,8 +253,8 @@ div.innerHTML=`
 <span class="inline-block px-3 py-1 text-xs font-bold rounded-full text-white mb-4" style="background:${p.color}">PHASE ${p.num}</span>
 <h3 class="font-display font-extrabold text-2xl sm:text-3xl mb-1">${p.label}</h3>
 <p class="text-zinc-500 text-sm mb-5">${p.time}</p>
-<p class="leading-relaxed text-sm sm:text-base" style="color: rgba(255, 255, 255, 0.85);">${p.text}</p>
-${p.eliminated.length?`<div class="mt-6 pt-4 border-t border-white/5"><p class="text-xs text-zinc-500 font-semibold uppercase tracking-wider mb-3">Eliminated This Phase</p><div class="flex flex-wrap gap-2">${p.eliminated.map(n=>{const f=fighters.find(x=>x.name===n);return`<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white" style="background:${f.color}33"><span class="w-2 h-2 rounded-full" style="background:${f.color}"></span>${n}</span>`}).join('')}</div></div>`:''}
+<p class="leading-relaxed text-sm sm:text-base" style="color:rgba(255,255,255,0.85)">${p.text}</p>
+${p.eliminated.length?`<div class="mt-6 pt-4 border-t border-white/5"><p class="text-xs text-zinc-500 font-semibold uppercase tracking-wider mb-3">Eliminated This Phase</p><div class="flex flex-wrap gap-2">${p.eliminated.map(n=>{const f=fighters.find(x=>x.name===n)||{color:'#6b7280'};return`<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white" style="background:${f.color}33"><span class="w-2 h-2 rounded-full" style="background:${f.color}"></span>${n}</span>`}).join('')}</div></div>`:''}
 </div>
 <div class="lg:w-72 shrink-0">
 <div class="glass p-5 text-center">
@@ -191,40 +263,67 @@ ${p.eliminated.length?`<div class="mt-6 pt-4 border-t border-white/5"><p class="
 </div></div></div></div>`;
 pc.appendChild(div);
 });
+}
 
-// === RENDER RANKINGS ===
-const rl=document.getElementById('rankings');
+function renderRankings(rankings){
+const rl=document.getElementById('verdict-rankings');
+if(!rl)return;
+rl.innerHTML='';
 rankings.forEach(r=>{
 const row=document.createElement('div');
 row.className='ranking-row flex items-center gap-4 px-5 py-3 rounded-xl cursor-default';
 row.innerHTML=`<span class="font-display font-black text-2xl w-8" style="color:${r.color}">${r.rank}</span><span class="w-3 h-3 rounded-full shrink-0" style="background:${r.color}"></span><div><p class="font-semibold text-sm">${r.name}</p><p class="text-zinc-500 text-xs">${r.reason}</p></div>`;
 rl.appendChild(row);
 });
+}
 
-// === CHART ===
-let chartInit=false;
-function initChart(){
-if(chartInit)return;chartInit=true;
+function renderVerdict(v){
+const vc=document.getElementById('verdict-container');
+vc.innerHTML=`
+<div class="fade-up mb-4"><h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-2">FINAL VERDICT</h2><p class="text-zinc-500 text-lg">Who survives the apocalypse?</p></div>
+<div class="fade-up ${v.glowClass} glass max-w-2xl mx-auto p-10 mt-10 ${v.borderClass}" style="transition-delay:.2s">
+<span class="inline-block px-4 py-1.5 text-sm font-bold rounded-full ${v.badgeBg} ${v.badgeText} mb-4">${v.badge}</span>
+<h3 class="font-display text-4xl sm:text-5xl font-black ${v.nameClass} mb-2">${v.name}</h3>
+<p class="${v.subClass} font-semibold mb-4">${v.subtitle}</p>
+<p class="text-zinc-400 leading-relaxed max-w-lg mx-auto">${v.text}</p>
+</div>
+<div id="verdict-rankings" class="fade-up max-w-2xl mx-auto mt-12 text-left" style="transition-delay:.4s"></div>`;
+renderRankings(storylines[currentScenario].rankings);
+}
+
+function renderChart(fighters){
+if(chartInstance){chartInstance.destroy();chartInstance=null;}
+const canvas=document.getElementById('powerChart');
 const sorted=[...fighters].sort((a,b)=>b.threat-a.threat);
-new Chart(document.getElementById('powerChart'),{
+chartInstance=new Chart(canvas,{
 type:'bar',
 data:{labels:sorted.map(f=>f.name),datasets:[{label:'Threat Level',data:sorted.map(f=>f.threat),backgroundColor:sorted.map(f=>f.color+'cc'),borderColor:sorted.map(f=>f.color),borderWidth:1,borderRadius:6,barPercentage:.7}]},
 options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:1200,easing:'easeOutQuart'},scales:{x:{max:100,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#71717a'}},y:{grid:{display:false},ticks:{color:'#f4f4f5',font:{family:'Outfit',weight:700,size:13}}}},plugins:{legend:{display:false}}}
 });
 }
 
-// === INTERSECTION OBSERVER ===
+// ============ OBSERVER ============
 const obs=new IntersectionObserver((entries)=>{
 entries.forEach(e=>{
 if(e.isIntersecting){
 e.target.classList.add('visible');
 e.target.querySelectorAll('.threat-fill').forEach(bar=>{bar.style.width=bar.dataset.width+'%'});
-if(e.target.closest('#chart-section'))initChart();
 }});
 },{threshold:0.15});
-document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 
-// === PARTICLES ===
+function reobserve(){
+setTimeout(()=>{
+document.querySelectorAll('.fade-up').forEach(el=>{
+if(!el.classList.contains('visible'))obs.observe(el);
+else{el.querySelectorAll('.threat-fill').forEach(bar=>{bar.style.width=bar.dataset.width+'%'});}
+});
+},50);
+}
+
+// ============ INIT ============
+switchScenario(0);
+
+// ============ PARTICLES ============
 (function(){
 const c=document.getElementById('particles'),ctx=c.getContext('2d');
 let w,h,mx=-1,my=-1;
